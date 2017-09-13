@@ -10,59 +10,35 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+import com.libertymutual.goforcode.invoicify.services.InvoicifyUserDetailsService;
+
 @EnableWebSecurity
 
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter    {
 	
+	private InvoicifyUserDetailsService userDetailsService;
+	
+	public SecurityConfiguration(InvoicifyUserDetailsService userDetailService) {
+		this.userDetailsService = userDetailsService;
+	}
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
 		http
 			.authorizeRequests()
-
 				.antMatchers("/", "/css/**", "/js/**").permitAll()
-				
 				.antMatchers("/invoices/**").hasAnyRole("ADMIN", "ACCOUNTANT")
 				.antMatchers("/billing-records/**").hasAnyRole("ADMIN", "CLERK")
-				.antMatchers("/admin/**").hasAnyRole("ADMIN")
+				.antMatchers("/administration/**").hasAnyRole("ADMIN")
 				.antMatchers("/home/**").permitAll()
-				.anyRequest().authenticated()
-				
+				.anyRequest().authenticated()	
 			.and()
-			
-			.formLogin();
-//				.loginPage("/home/login").failureUrl("/login-error");
-//				.loginProcessingUrl("/trylogin");
-					
+			.formLogin();			
 	}
 	
-	@Bean
+	@Override
 	public UserDetailsService userDetailsService() {
-		InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-		UserDetails 
-		user = User
-			.withUsername("admin")
-			.password("admin")
-			.roles("ADMIN")
-			.build();
-		manager.createUser(user);
-	
-		user = User
-			.withUsername("accountant")
-			.password("accountant")
-			.roles("ACCOUNTANT")
-			.build();
-		manager.createUser(user);
-		
-		user = User
-				.withUsername("clerk")
-				.password("clerk")
-				.roles("CLERK")
-				.build();
-		manager.createUser(user);
-	
-	return manager;
-
+		return userDetailsService;
 	}
 	
 }
