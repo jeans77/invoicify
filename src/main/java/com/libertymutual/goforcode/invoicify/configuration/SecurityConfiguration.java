@@ -1,6 +1,7 @@
 package com.libertymutual.goforcode.invoicify.configuration;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,6 +16,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter    {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+
 		http
 			.authorizeRequests()
 
@@ -22,14 +24,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter    {
 				
 				.antMatchers("/invoices/**").hasAnyRole("ADMIN", "ACCOUNTANT")
 				.antMatchers("/billing-records/**").hasAnyRole("ADMIN", "CLERK")
-				.antMatchers("/admin/**").hasRole("ADMIN")
+				.antMatchers("/admin/**").hasAnyRole("ADMIN")
+				.antMatchers("/home/**").permitAll()
 				.anyRequest().authenticated()
 				
 			.and()
-			.formLogin()
-				.loginPage("/home/login")
-				.loginProcessingUrl("/trylogin");
-		
+			
+			.formLogin();
+//				.loginPage("/home/login").failureUrl("/login-error");
+//				.loginProcessingUrl("/trylogin");
+					
 	}
 	
 	@Bean
@@ -55,7 +59,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter    {
 				.password("clerk")
 				.roles("CLERK")
 				.build();
-			manager.createUser(user);
+		manager.createUser(user);
 	
 	return manager;
 
