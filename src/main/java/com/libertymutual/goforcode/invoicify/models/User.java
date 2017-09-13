@@ -52,7 +52,7 @@ public class User implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 //		List<String> roleNames = new ArrayList<String>();
 //		for (UserRole role : roles) {
-//			roleNames.add(role.getName());
+//			roleNames.add("ROLE_" + role.getName());
 //		}
 		
 		List<String> roleNames = roles.stream()

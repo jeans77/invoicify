@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+
+<title>Welcome to SignUp</title>
+
+</head>
+
+<body>
+
+{{#errorMessage}}
+	{{ errorMessage }}
+{{/errorMessage}}
+
+<form method="post" action="/signup">
+	<input type="text" name="username" required>
+	<br>
+	<input type="password" name="password" required>
+	<br>
+	<input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+	<br>
+	<button>SignUp</button>	
+</form>
+
+</body>
+
+</html>
